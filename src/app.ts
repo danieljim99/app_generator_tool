@@ -1,5 +1,6 @@
 import { YamlLoader } from "https://deno.land/x/yaml_loader/mod.ts";
 import { config } from "https://deno.land/x/dotenv/mod.ts";
+import { ensureDirSync } from "https://deno.land/std/fs/mod.ts";
 
 const readYaml = async (path: string) => {
     const yamlLoader = new YamlLoader();
@@ -72,6 +73,8 @@ export const app = async () => {
     const schemas = types.map(type => createSchema(type));
 
     const encoder = new TextEncoder();
+
+    await ensureDirSync("./outputs");
 
     schemas.forEach((schema, index) => {
         Deno.writeFile(`./outputs/${index}.graphql`, encoder.encode(schema));
