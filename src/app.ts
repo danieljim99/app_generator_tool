@@ -64,6 +64,8 @@ const createSchema = (type: Object) => {
 };
 
 export const app = async () => {
+    const encoder = new TextEncoder();
+    
     const types = (await readYaml(config().YAML_FILE)).types;
 
     if (!types || types.length === 0) {
@@ -71,8 +73,6 @@ export const app = async () => {
     }
 
     const schemas = types.map(type => createSchema(type));
-
-    const encoder = new TextEncoder();
 
     await ensureDirSync("./outputs");
 
