@@ -1,18 +1,17 @@
 {
   types: [
     Type1: {
-      attrb1_1: "string",
+      attrb1_1: "boolean",
       attrb2_1: "string"
     },
     Type2: {
       attrb1_2: "string",
-      attrb2_2: "Type2",
-      attrb3_2: "[Type3]"
+      attrb2_2: "number",
+      attrb3_2: "Type3"
     },
     Type3: {
       attrb1_3: "string",
-      attrb2_3: "number",
-      attrb3_3: "[number]"
+      attrb2_3: "Type2"
     }
   ]
 }
