@@ -18,8 +18,9 @@ const readYaml = async (path: string) => {
 
 const getGraphQLType = (type: string, createdTypes: GraphQLObjectType[]) => {
     let result;
+    let isArray = type.includes("[]");
 
-    //TO-DO: Check if the type is Array
+    type = isArray ? type.slice(2) : type;
 
     switch (type) {
         default:
@@ -27,15 +28,18 @@ const getGraphQLType = (type: string, createdTypes: GraphQLObjectType[]) => {
             if (!result) {
                 throw new Error(`The type ${type} does not exist`);
             }
+            if (isArray) {
+                result = GraphQLList(result);
+            }
             break;
         case "string":
-            result = GraphQLString;
+            result = isArray ? GraphQLList(GraphQLString) : GraphQLString;
             break;
         case "number":
-            result = GraphQLInt;
+            result = isArray ? GraphQLList(GraphQLInt) : GraphQLInt;
             break;
         case "boolean":
-            result = GraphQLBoolean;
+            result = isArray ? GraphQLList(GraphQLBoolean) : GraphQLBoolean;
             break;
     };
 
@@ -98,8 +102,11 @@ const createSchema = async (types: Object[]) => {
             { name: "Peter", email: "peter@test.com" },
         ],
         getActivities: () => [
-            { name: "Activity1", author: { name: "David", email: "david@test.com" } },
-            { name: "Activity2", author: { name: "Peter", email: "peter@test.com" } },
+            { name: "Activity1", authors: [
+                { name: "David", email: "david@test.com" },
+                { name: "Pepe", email: "peter@test.com" }
+            ] },
+            { name: "Activity2", authors: [{ name: "Peter", email: "peter@test.com" }] },
         ],
     };
     const executeSchema = async (query: any) => {

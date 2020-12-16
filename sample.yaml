@@ -7,10 +7,10 @@
     Type2: {
       attrb1_2: "string",
       attrb2_2: "number",
-      attrb3_2: "Type3"
+      attrb3_2: "[]Type1"
     },
     Type3: {
-      attrb1_3: "string",
+      attrb1_3: "[]string",
       attrb2_3: "Type2"
     }
   ]
