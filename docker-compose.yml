@@ -1,0 +1,32 @@
+version: "3.2"
+
+services:
+  app_generator:
+    image: hayd/ubuntu-deno:1.5.2
+    environment:
+      - MONGO_URL=mongodb://mongodb/generator
+      - YAML_FILE=./test.yaml
+    depends_on:
+      - mongodb
+    volumes:
+      - type: bind
+        source: .
+        target: /usr/src
+    ports:
+      - 5000:5000
+    command: >
+      bash -c "cd /usr/src/app_generator
+      && deno run --allow-read --allow-net index.ts"
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db:/data/db
+    expose:
+      - "27017"
+    ports:
+      - 4003:27017
+    command: mongod --logpath=/dev/null

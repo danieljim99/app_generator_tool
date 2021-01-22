@@ -1,4 +1,6 @@
 import {
+    Application,
+    config,
     graphql,
     GraphQLBoolean,
     GraphQLInt,
@@ -6,17 +8,16 @@ import {
     GraphQLObjectType,
     GraphQLSchema,
     GraphQLString,
-} from "https://cdn.pika.dev/graphql/15.3.0";
-import { Application, Router } from "https://deno.land/x/oak@v6.2.0/mod.ts";
-import { YamlLoader } from "https://deno.land/x/yaml_loader/mod.ts";
-import { config } from "https://deno.land/x/dotenv/mod.ts";
+    Router,
+    YamlLoader
+} from "../deps.ts";
 
 const readYaml = async (path: string) => {
     const yamlLoader = new YamlLoader();
     return await yamlLoader.parseFile(path) as { types: any[] };
 };
 
-const getGraphQLType = (type: string, createdTypes: GraphQLObjectType[]) => {
+const getGraphQLType = (type: string, createdTypes: typeof GraphQLObjectType[]) => {
     let result;
     let isArray = type.includes("[]");
 
@@ -46,7 +47,7 @@ const getGraphQLType = (type: string, createdTypes: GraphQLObjectType[]) => {
     return result;
 };
 
-const generateFields = (type: Object, createdTypes: GraphQLObjectType[]) => {
+const generateFields = (type: Object, createdTypes: typeof GraphQLObjectType[]) => {
     let result: Object = {};
 
     Object.keys(Object.values(type)[0]).forEach((key, index) => {
@@ -67,14 +68,14 @@ const generateFields = (type: Object, createdTypes: GraphQLObjectType[]) => {
 };
 
 const createObjectTypes = async (types: Object[]) => {
-    let result: GraphQLObjectType[] = [];
+    let result: any[] = [];
 
-    types.forEach(type => {
+    for (let type of types) {
         result.push(new GraphQLObjectType({
             name: Object.keys(type)[0],
             fields: generateFields(type, result),
         }));
-    });
+    }
 
     return result;
 };
@@ -97,6 +98,15 @@ const createSchema = async (types: Object[]) => {
     });
     const resolver = {
         //TO-DO: Generate resolvers automatically
+            //Query
+                //get(first attrb)
+                //getAll(filters?)
+            //Mutation
+                //create(attrbs)
+                //remove(first attrb)
+                //update(first attrb, attrbs)
+            //
+        //
         getUsers: () => [
             { name: "David", email: "david@test.com" },
             { name: "Peter", email: "peter@test.com" },
