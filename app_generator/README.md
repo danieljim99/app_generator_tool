@@ -3,7 +3,7 @@
 ## USAGE
 * Define the types that are going to be used by the app in a yaml file.
 * In the *.env* file add the yaml file path as it is in .env.sample file.
-* Run *deno run --allow-read --allow-net index.ts* in the root folder.
+* Run *deno run --allow-read --allow-net index.ts* in the app_generator folder.
 
 ## YAML FILE FORMAT
 * All types must be inside the *types* array.
