@@ -1,5 +1,6 @@
 import {
     Application,
+    Bson,
     config,
     graphql,
     GraphQLBoolean,
@@ -8,6 +9,7 @@ import {
     GraphQLObjectType,
     GraphQLSchema,
     GraphQLString,
+    MongoClient,
     Router,
     YamlLoader
 } from "../deps.ts";
@@ -15,6 +17,13 @@ import {
 const readYaml = async (path: string) => {
     const yamlLoader = new YamlLoader();
     return await yamlLoader.parseFile(path) as { types: any[] };
+};
+
+const connectDB = async () => {
+    const client = new MongoClient();
+    await client.connect(config().MONGO_URL);
+    const db = client.database("generator");
+    return db;
 };
 
 const getGraphQLType = (type: string, createdTypes: typeof GraphQLObjectType[]) => {
@@ -81,14 +90,15 @@ const createObjectTypes = async (types: Object[]) => {
 };
 
 const createSchema = async (types: Object[]) => {
+    const db = await connectDB();
     const objectTypes = await createObjectTypes(types);
     const queryObjectType = new GraphQLObjectType({
         name: "Query",
         fields: {
-            getUsers: {
+            getAllUser: {
                 type: new GraphQLList(objectTypes[0]),
             },
-            getActivities: {
+            getAllActivity: {
                 type: new GraphQLList(objectTypes[1]),
             }
         },
@@ -107,17 +117,12 @@ const createSchema = async (types: Object[]) => {
                 //update(first attrb, attrbs)
             //
         //
-        getUsers: () => [
-            { name: "David", email: "david@test.com" },
-            { name: "Peter", email: "peter@test.com" },
-        ],
-        getActivities: () => [
-            { name: "Activity1", authors: [
-                { name: "David", email: "david@test.com" },
-                { name: "Pepe", email: "peter@test.com" }
-            ] },
-            { name: "Activity2", authors: [{ name: "Peter", email: "peter@test.com" }] },
-        ],
+        getAllUser: async () => {
+            return (await db.collection("UserCollection").find()).toArray();
+        },
+        getAllActivity: async () => {
+            return (await db.collection("ActivityCollection").find()).toArray();
+        },
     };
     const executeSchema = async (query: any) => {
         const result = await graphql(schema, query, resolver);
