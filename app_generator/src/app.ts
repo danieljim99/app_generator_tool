@@ -91,6 +91,8 @@ const generateSchemaFields = (createdTypes: any[]) => {
         });
     }
 
+    //ToDo generate other query/mutation
+
     return result;
 };
 
@@ -98,19 +100,20 @@ const generateResolvers = async (queryType: any) => {
     const db = await connectDB();
     let result: Object = {};
 
-    //TO-DO Generate other resolvers
-
     //Generate GetAllResolvers
     for (let query of Object.keys(queryType._fields)) {
         const typeName = queryType._fields[query].type.ofType.name;
-        Object.defineProperty(result, query, {
-            writable: true,
-            enumerable: true,
-            configurable: true,
-            value: async () => {
-                return (await db.collection(`${typeName}Collection`).find()).toArray();
-            },
-        });
+        if(query.includes("getAll")) {
+            Object.defineProperty(result, query, {
+                writable: true,
+                enumerable: true,
+                configurable: true,
+                value: async () => {
+                    return (await db.collection(`${typeName}Collection`).find()).toArray();
+                },
+            });
+        }
+        //ToDo generate other resolvers
     }
 
     return result;
