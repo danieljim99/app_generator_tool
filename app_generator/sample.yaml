@@ -1,17 +1,12 @@
 {
   types: [
-    Type1: {
-      attrb1_1: "boolean",
-      attrb2_1: "string"
+    User: {
+      name: "string",
+      email: "string"
     },
-    Type2: {
-      attrb1_2: "string",
-      attrb2_2: "number",
-      attrb3_2: "[]Type1"
-    },
-    Type3: {
-      attrb1_3: "[]string",
-      attrb2_3: "Type2"
+    Activity: {
+      authors: "[]User",
+      name: "string"
     }
   ]
 }
