@@ -56,7 +56,7 @@ const getGraphQLType = (type: string, createdTypes: typeof GraphQLObjectType[]) 
     return result;
 };
 
-const generateFields = (type: Object, createdTypes: typeof GraphQLObjectType[]) => {
+const generateTypeFields = (type: Object, createdTypes: typeof GraphQLObjectType[]) => {
     let result: Object = {};
 
     Object.keys(Object.values(type)[0]).forEach((key, index) => {
@@ -76,13 +76,53 @@ const generateFields = (type: Object, createdTypes: typeof GraphQLObjectType[]) 
     return result;
 };
 
+const generateSchemaFields = (createdTypes: any[]) => {
+    let result: Object = {};
+
+    //Generate getAll query
+    for (let type of createdTypes) {
+        Object.defineProperty(result, `getAll${type.name}`, {
+            writable: true,
+            enumerable: true,
+            configurable: true,
+            value: {
+                type: new GraphQLList(type),
+            },
+        });
+    }
+
+    return result;
+};
+
+const generateResolvers = async (queryType: any) => {
+    const db = await connectDB();
+    let result: Object = {};
+
+    //TO-DO Generate other resolvers
+
+    //Generate GetAllResolvers
+    for (let query of Object.keys(queryType._fields)) {
+        const typeName = queryType._fields[query].type.ofType.name;
+        Object.defineProperty(result, query, {
+            writable: true,
+            enumerable: true,
+            configurable: true,
+            value: async () => {
+                return (await db.collection(`${typeName}Collection`).find()).toArray();
+            },
+        });
+    }
+
+    return result;
+};
+
 const createObjectTypes = async (types: Object[]) => {
     let result: any[] = [];
 
     for (let type of types) {
         result.push(new GraphQLObjectType({
             name: Object.keys(type)[0],
-            fields: generateFields(type, result),
+            fields: generateTypeFields(type, result),
         }));
     }
 
@@ -90,40 +130,15 @@ const createObjectTypes = async (types: Object[]) => {
 };
 
 const createSchema = async (types: Object[]) => {
-    const db = await connectDB();
     const objectTypes = await createObjectTypes(types);
     const queryObjectType = new GraphQLObjectType({
         name: "Query",
-        fields: {
-            getAllUser: {
-                type: new GraphQLList(objectTypes[0]),
-            },
-            getAllActivity: {
-                type: new GraphQLList(objectTypes[1]),
-            }
-        },
+        fields: generateSchemaFields(objectTypes),
     });
     const schema = new GraphQLSchema({
         query: queryObjectType,
     });
-    const resolver = {
-        //TO-DO: Generate resolvers automatically
-            //Query
-                //get(first attrb)
-                //getAll(filters?)
-            //Mutation
-                //create(attrbs)
-                //remove(first attrb)
-                //update(first attrb, attrbs)
-            //
-        //
-        getAllUser: async () => {
-            return (await db.collection("UserCollection").find()).toArray();
-        },
-        getAllActivity: async () => {
-            return (await db.collection("ActivityCollection").find()).toArray();
-        },
-    };
+    const resolver = await generateResolvers(queryObjectType);
     const executeSchema = async (query: any) => {
         const result = await graphql(schema, query, resolver);
         return result;
