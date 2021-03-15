@@ -116,8 +116,6 @@ const generateSchemaFields = (createdTypes: any[]) => {
     }
 
     /* ToDo generate other query/mutation
-        get(first attr)
-
         create(all attr)
         remove(first attr)
     */
@@ -160,8 +158,6 @@ const generateResolvers = async (queryType: any) => {
             });
         }
         /* ToDo generate other resolvers
-            get(first attr)
-
             create(all attr)
             remove(first attr)
         */
