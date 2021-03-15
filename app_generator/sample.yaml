@@ -1,12 +1,12 @@
 {
   types: [
     User: {
-      name: "string",
-      email: "string"
+      email: "string",
+      name: "string"
     },
     Activity: {
-      authors: "[]User",
-      name: "string"
+      name: "string",
+      authors: "[]User"
     }
   ]
 }
