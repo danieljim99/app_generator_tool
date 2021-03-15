@@ -81,6 +81,10 @@ const generateSchemaFields = (createdTypes: any[]) => {
 
     //Generate getAll query
     for (let type of createdTypes) {
+        let firstAttrName = (Object.values(type._fields())[0] as any).name;
+        let firstAttrType = (Object.values(type._fields())[0] as any).type;
+
+        // getAll...()
         Object.defineProperty(result, `getAll${type.name}`, {
             writable: true,
             enumerable: true,
@@ -89,9 +93,34 @@ const generateSchemaFields = (createdTypes: any[]) => {
                 type: new GraphQLList(type),
             },
         });
+
+        // get...(firstAttr)
+        let argObject = {};
+        Object.defineProperty(argObject, firstAttrName, {
+            writable: true,
+            enumerable: true,
+            configurable: true,
+            value: {
+                type: firstAttrType,
+            },
+        });
+        Object.defineProperty(result, `get${type.name}`, {
+            writable: true,
+            enumerable: true,
+            configurable: true,
+            value: {
+                type: type,
+                args: argObject,
+            },
+        });
     }
 
-    //ToDo generate other query/mutation
+    /* ToDo generate other query/mutation
+        get(first attr)
+
+        create(all attr)
+        remove(first attr)
+    */
 
     return result;
 };
@@ -102,7 +131,8 @@ const generateResolvers = async (queryType: any) => {
 
     //Generate GetAllResolvers
     for (let query of Object.keys(queryType._fields)) {
-        const typeName = queryType._fields[query].type.ofType.name;
+        const args = queryType._fields[query].args;
+        const typeName = queryType._fields[query].type.ofType?.name || queryType._fields[query].type.name;
         if(query.includes("getAll")) {
             Object.defineProperty(result, query, {
                 writable: true,
@@ -112,8 +142,29 @@ const generateResolvers = async (queryType: any) => {
                     return (await db.collection(`${typeName}Collection`).find()).toArray();
                 },
             });
+        } else if(query.includes("get")) {
+            Object.defineProperty(result, query, {
+                writable: true,
+                enumerable: true,
+                configurable: true,
+                value: async (queryArgs: any) => {
+                    let filterObject: Object = {};
+                    Object.defineProperty(filterObject, args[0].name, {
+                        writable: true,
+                        enumerable: true,
+                        configurable: true,
+                        value: queryArgs[args[0].name],
+                    });
+                    return await db.collection(`${typeName}Collection`).findOne(filterObject);
+                },
+            });
         }
-        //ToDo generate other resolvers
+        /* ToDo generate other resolvers
+            get(first attr)
+
+            create(all attr)
+            remove(first attr)
+        */
     }
 
     return result;
@@ -133,7 +184,10 @@ const createObjectTypes = async (types: Object[]) => {
 };
 
 const createSchema = async (types: Object[]) => {
+    console.log("Generating GraphQL types...");
     const objectTypes = await createObjectTypes(types);
+
+    console.log("Generating GraphQL schema...");
     const queryObjectType = new GraphQLObjectType({
         name: "Query",
         fields: generateSchemaFields(objectTypes),
@@ -141,11 +195,14 @@ const createSchema = async (types: Object[]) => {
     const schema = new GraphQLSchema({
         query: queryObjectType,
     });
+
+    console.log("Generating api resolvers...");
     const resolver = await generateResolvers(queryObjectType);
     const executeSchema = async (query: any) => {
         const result = await graphql(schema, query, resolver);
         return result;
     };
+
     const router = new Router();
     router.post("/graphql", async ({ request, response }) => {
         if (request.hasBody) {
