@@ -56,13 +56,13 @@ const getGraphQLType = (type: string, createdTypes: typeof GraphQLObjectType[]) 
     return result;
 };
 
-const generateTypeFields = (type: Object, createdTypes: typeof GraphQLObjectType[]) => {
+const generateTypeFields = (type: any, createdTypes: typeof GraphQLObjectType[]) => {
     let result: any = {};
 
-    Object.keys(Object.values(type)[0]).forEach((key, index) => {
-        result[key] = { type: 
+    type.fields.forEach((field: any) => {
+        result[field.name] = { type: 
             getGraphQLType(
-                Object.values(Object.values(type)[0])[index] as unknown as string,
+                field.type,
                 createdTypes
             )
         };
@@ -127,12 +127,12 @@ const generateResolvers = async (queryType: any) => {
     return result;
 };
 
-const createObjectTypes = async (types: Object[]) => {
+const createObjectTypes = async (types: any[]) => {
     let result: any[] = [];
 
     for (let type of types) {
         result.push(new GraphQLObjectType({
-            name: Object.keys(type)[0],
+            name: type.name,
             fields: generateTypeFields(type, result),
         }));
     }
