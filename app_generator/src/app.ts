@@ -57,27 +57,22 @@ const getGraphQLType = (type: string, createdTypes: typeof GraphQLObjectType[]) 
 };
 
 const generateTypeFields = (type: Object, createdTypes: typeof GraphQLObjectType[]) => {
-    let result: Object = {};
+    let result: any = {};
 
     Object.keys(Object.values(type)[0]).forEach((key, index) => {
-        Object.defineProperty(result, key, {
-            writable: true,
-            enumerable: true,
-            configurable: true,
-            value: {
-                type: getGraphQLType(
-                    Object.values(Object.values(type)[0])[index] as unknown as string,
-                    createdTypes
-                )
-            },
-        });
+        result[key] = { type: 
+            getGraphQLType(
+                Object.values(Object.values(type)[0])[index] as unknown as string,
+                createdTypes
+            )
+        };
     });
 
     return result;
 };
 
 const generateSchemaFields = (createdTypes: any[]) => {
-    let result: Object = {};
+    let result: any = {};
 
     //Generate getAll query
     for (let type of createdTypes) {
@@ -85,34 +80,15 @@ const generateSchemaFields = (createdTypes: any[]) => {
         let firstAttrType = (Object.values(type._fields())[0] as any).type;
 
         // getAll...()
-        Object.defineProperty(result, `getAll${type.name}`, {
-            writable: true,
-            enumerable: true,
-            configurable: true,
-            value: {
-                type: new GraphQLList(type),
-            },
-        });
+        result[`getAll${type.name}`] = { type: new GraphQLList(type) };
 
         // get...(firstAttr)
-        let argObject = {};
-        Object.defineProperty(argObject, firstAttrName, {
-            writable: true,
-            enumerable: true,
-            configurable: true,
-            value: {
-                type: firstAttrType,
-            },
-        });
-        Object.defineProperty(result, `get${type.name}`, {
-            writable: true,
-            enumerable: true,
-            configurable: true,
-            value: {
-                type: type,
-                args: argObject,
-            },
-        });
+        let argObject: any = {};
+        argObject[firstAttrName] = { type: firstAttrType };
+        result[`get${type.name}`] = {
+            type: type,
+            args: argObject
+        };
     }
 
     /* ToDo generate other query/mutation
@@ -125,37 +101,22 @@ const generateSchemaFields = (createdTypes: any[]) => {
 
 const generateResolvers = async (queryType: any) => {
     const db = await connectDB();
-    let result: Object = {};
+    let result: any = {};
 
     //Generate GetAllResolvers
     for (let query of Object.keys(queryType._fields)) {
         const args = queryType._fields[query].args;
         const typeName = queryType._fields[query].type.ofType?.name || queryType._fields[query].type.name;
         if(query.includes("getAll")) {
-            Object.defineProperty(result, query, {
-                writable: true,
-                enumerable: true,
-                configurable: true,
-                value: async () => {
-                    return (await db.collection(`${typeName}Collection`).find()).toArray();
-                },
-            });
+            result[query] = async () => {
+                return (await db.collection(`${typeName}Collection`).find()).toArray();
+            };
         } else if(query.includes("get")) {
-            Object.defineProperty(result, query, {
-                writable: true,
-                enumerable: true,
-                configurable: true,
-                value: async (queryArgs: any) => {
-                    let filterObject: Object = {};
-                    Object.defineProperty(filterObject, args[0].name, {
-                        writable: true,
-                        enumerable: true,
-                        configurable: true,
-                        value: queryArgs[args[0].name],
-                    });
-                    return await db.collection(`${typeName}Collection`).findOne(filterObject);
-                },
-            });
+            result[query] = async (queryArgs: any) => {
+                let filterObject: any = {};
+                filterObject[args[0].name] = queryArgs[args[0].name];
+                return await db.collection(`${typeName}Collection`).findOne(filterObject);
+            };
         }
         /* ToDo generate other resolvers
             create(all attr)
