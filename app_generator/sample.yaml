@@ -1,12 +1,13 @@
-{
-  types: [
-    User: {
-      email: "string",
-      name: "string"
-    },
-    Activity: {
-      name: "string",
-      authors: "[]User"
-    }
-  ]
-}
+types:
+  - name: 'User'
+    fields:
+    - name: 'name'
+      type: 'string'
+    - name: 'email'
+      type: 'string'
+  - name: 'Activity'
+    fields:
+    - name: 'name'
+      type: 'string'
+    - name: 'authors'
+      type: '[]User'
