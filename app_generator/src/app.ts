@@ -6,6 +6,7 @@ import {
     GraphQLBoolean,
     GraphQLInt,
     GraphQLList,
+    GraphQLInputObjectType,
     GraphQLObjectType,
     GraphQLSchema,
     GraphQLString,
@@ -16,7 +17,9 @@ import {
 
 const readYaml = async (path: string) => {
     const yamlLoader = new YamlLoader();
-    return await yamlLoader.parseFile(path) as { types: any[] };
+    let result = await yamlLoader.parseFile(path) as { types: any[] };
+    result.types = result.types.map(type => ({ ...type, fields: [{ name: '_id', type: "string" }, ...type.fields] }));
+    return result;
 };
 
 const connectDB = async () => {
@@ -71,10 +74,9 @@ const generateTypeFields = (type: any, createdTypes: typeof GraphQLObjectType[])
     return result;
 };
 
-const generateSchemaFields = (createdTypes: any[]) => {
+const generateQuerySchemaFields = (createdTypes: any[]) => {
     let result: any = {};
 
-    //Generate getAll query
     for (let type of createdTypes) {
         let firstAttrName = (Object.values(type._fields())[0] as any).name;
         let firstAttrType = (Object.values(type._fields())[0] as any).type;
@@ -91,37 +93,74 @@ const generateSchemaFields = (createdTypes: any[]) => {
         };
     }
 
-    /* ToDo generate other query/mutation
-        create(all attr)
-        remove(first attr)
-    */
+    return result;
+};
+
+const generateMutationSchemaFields = (createdTypes: any[]) => {
+    let result: any = {};
+
+    for (let type of createdTypes) {
+        let attrs = Object.values(type._fields()).map((field: any) => (
+            { name: field.name, type: field.type }
+        ));
+        //create...(all attr !_id)
+        let argObject: any = {};
+        attrs.forEach((attr: any, index: number) => {
+            if (index > 0) {
+                argObject[attr.name] = { type: attr.type };
+            }
+        });
+        let argInputObject: any = {};
+        argInputObject[`${type.name}Input`] = {
+            type: new GraphQLInputObjectType({
+                name: `${type.name}Input`,
+                fields: argObject,
+            })
+        };
+        result[`create${type.name}`] = {
+            type: type,
+            args: argInputObject,
+        };
+        //TODO remove...
+    }
 
     return result;
 };
 
-const generateResolvers = async (queryType: any) => {
+const generateResolvers = async (queryType: any, mutationType: any) => {
     const db = await connectDB();
     let result: any = {};
 
-    //Generate GetAllResolvers
+    //query resolvers
     for (let query of Object.keys(queryType._fields)) {
         const args = queryType._fields[query].args;
         const typeName = queryType._fields[query].type.ofType?.name || queryType._fields[query].type.name;
-        if(query.includes("getAll")) {
+        if (query.startsWith("getAll")) {
+            //getAll...
             result[query] = async () => {
                 return (await db.collection(`${typeName}Collection`).find()).toArray();
             };
-        } else if(query.includes("get")) {
+        } else if (query.startsWith("get")) {
+            //get...
             result[query] = async (queryArgs: any) => {
                 let filterObject: any = {};
-                filterObject[args[0].name] = queryArgs[args[0].name];
+                filterObject[args[0].name] = new Bson.ObjectId(queryArgs[args[0].name]);
                 return await db.collection(`${typeName}Collection`).findOne(filterObject);
             };
         }
-        /* ToDo generate other resolvers
-            create(all attr)
-            remove(first attr)
-        */
+    }
+
+    //mutation resolvers
+    for (let mutation of Object.keys(mutationType._fields)) {
+        const typeName = mutationType._fields[mutation].type.ofType?.name || mutationType._fields[mutation].type.name;
+        if(mutation.startsWith("create")) {
+            //create...
+            result[mutation] = async (mutationArgs: any) => {
+                const { insertedId } = await db.collection(`${typeName}Collection`).insertOne(mutationArgs[`${typeName}Input`]);
+                return {_id: insertedId, ...mutationArgs[`${typeName}Input`]};
+            };
+        }
+        //TODO remove...
     }
 
     return result;
@@ -147,14 +186,20 @@ const createSchema = async (types: Object[]) => {
     console.log("Generating GraphQL schema...");
     const queryObjectType = new GraphQLObjectType({
         name: "Query",
-        fields: generateSchemaFields(objectTypes),
+        fields: generateQuerySchemaFields(objectTypes),
     });
+    const mutationObjectType = new GraphQLObjectType({
+        name: "Mutation",
+        fields: generateMutationSchemaFields(objectTypes),
+    });
+
     const schema = new GraphQLSchema({
         query: queryObjectType,
+        mutation: mutationObjectType,
     });
 
     console.log("Generating api resolvers...");
-    const resolver = await generateResolvers(queryObjectType);
+    const resolver = await generateResolvers(queryObjectType, mutationObjectType);
     const executeSchema = async (query: any) => {
         const result = await graphql(schema, query, resolver);
         return result;
