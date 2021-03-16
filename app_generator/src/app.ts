@@ -84,7 +84,7 @@ const generateQuerySchemaFields = (createdTypes: any[]) => {
         // getAll...()
         result[`getAll${type.name}`] = { type: new GraphQLList(type) };
 
-        // get...(firstAttr)
+        // get...(_id)
         let argObject: any = {};
         argObject[firstAttrName] = { type: firstAttrType };
         result[`get${type.name}`] = {
@@ -103,7 +103,7 @@ const generateMutationSchemaFields = (createdTypes: any[]) => {
         let attrs = Object.values(type._fields()).map((field: any) => (
             { name: field.name, type: field.type }
         ));
-        //create...(all attr !_id)
+        //create...(all attr but not _id)
         let argObject: any = {};
         attrs.forEach((attr: any, index: number) => {
             if (index > 0) {
@@ -121,7 +121,7 @@ const generateMutationSchemaFields = (createdTypes: any[]) => {
             type: type,
             args: argInputObject,
         };
-        //TODO remove...
+        //TODO remove...(_id)
     }
 
     return result;
