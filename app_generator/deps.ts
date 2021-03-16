@@ -3,6 +3,7 @@ export {
     GraphQLBoolean,
     GraphQLInt,
     GraphQLList,
+    GraphQLInputObjectType,
     GraphQLObjectType,
     GraphQLSchema,
     GraphQLString,
