@@ -121,7 +121,16 @@ const generateMutationSchemaFields = (createdTypes: any[]) => {
             type: type,
             args: argInputObject,
         };
-        //TODO remove...(_id)
+        //remove...(_id)
+        let firstAttrName = (Object.values(type._fields())[0] as any).name;
+        let firstAttrType = (Object.values(type._fields())[0] as any).type;
+
+        argObject = {};
+        argObject[firstAttrName] = { type: firstAttrType };
+        result[`remove${type.name}`] = {
+            type: type,
+            args: argObject
+        };
     }
 
     return result;
@@ -152,6 +161,7 @@ const generateResolvers = async (queryType: any, mutationType: any) => {
 
     //mutation resolvers
     for (let mutation of Object.keys(mutationType._fields)) {
+        const args = mutationType._fields[mutation].args;
         const typeName = mutationType._fields[mutation].type.ofType?.name || mutationType._fields[mutation].type.name;
         if(mutation.startsWith("create")) {
             //create...
@@ -159,8 +169,19 @@ const generateResolvers = async (queryType: any, mutationType: any) => {
                 const { insertedId } = await db.collection(`${typeName}Collection`).insertOne(mutationArgs[`${typeName}Input`]);
                 return {_id: insertedId, ...mutationArgs[`${typeName}Input`]};
             };
+        } else if (mutation.startsWith("remove")) {
+            //remove...
+            result[mutation] = async (mutationArgs: any) => {
+                let filterObject: any = {};
+                filterObject[args[0].name] = new Bson.ObjectId(mutationArgs[args[0].name]);
+                const result = await db.collection(`${typeName}Collection`).findOne(filterObject);
+                if (!result) {
+                    throw new Error(`${typeName} not found`);
+                }
+                await db.collection(`${typeName}Collection`).deleteOne(filterObject);
+                return result;
+            }
         }
-        //TODO remove...
     }
 
     return result;
