@@ -131,6 +131,22 @@ const generateMutationSchemaFields = (createdTypes: any[]) => {
             type: type,
             args: argObject
         };
+        //update...(_id, allAttr)
+        argObject = {};
+        attrs.forEach((attr: any, index: number) => {
+            if (index > 0) {
+                argObject[attr.name] = { type: attr.type };
+            }
+        });
+        let idArgObject: any = {};
+        idArgObject[firstAttrName] = { type: firstAttrType };
+        result[`update${type.name}`] = {
+            type: type,
+            args: {
+                ...idArgObject,
+                ...argInputObject,
+            }
+        };
     }
 
     return result;
@@ -180,6 +196,19 @@ const generateResolvers = async (queryType: any, mutationType: any) => {
                 }
                 await db.collection(`${typeName}Collection`).deleteOne(filterObject);
                 return result;
+            }
+        } else if (mutation.startsWith("update")) {
+            //update...
+            result[mutation] = async (mutationArgs: any) => {
+                let filterObject: any = {};
+                let updateObject: any = mutationArgs[`${typeName}Input`];
+                filterObject[args[0].name] = new Bson.ObjectId(mutationArgs[args[0].name]);
+                const result = await db.collection(`${typeName}Collection`).findOne(filterObject);
+                if (!result) {
+                    throw new Error(`${typeName} not found`);
+                }
+                await db.collection(`${typeName}Collection`).updateOne(filterObject, { $set: updateObject});
+                return await db.collection(`${typeName}Collection`).findOne(filterObject);
             }
         }
     }
