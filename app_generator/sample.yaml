@@ -9,5 +9,3 @@ types:
     fields:
     - name: 'name'
       type: 'string'
-    - name: 'authors'
-      type: '[]User'
