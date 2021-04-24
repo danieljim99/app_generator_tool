@@ -1,7 +1,7 @@
 version: "3.2"
 
 services:
-  app_generator:
+  backend:
     image: hayd/ubuntu-deno:1.5.2
     environment:
       - MONGO_URL=mongodb://mongodb
@@ -15,7 +15,7 @@ services:
     ports:
       - 5000:5000
     command: >
-      bash -c "cd /usr/src/app_generator
+      bash -c "cd /usr/src/backend
       && deno run --allow-read --allow-net index.ts"
 
   mongodb:
