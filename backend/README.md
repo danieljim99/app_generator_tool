@@ -1,9 +1,9 @@
-# APP GENERATOR TOOL
+# APP GENERATOR TOOL - BACKEND
 
 ## USAGE
 * Define the types that are going to be used by the app in a yaml file.
 * In the *.env* file add the yaml file path as it is in .env.sample file.
-* Run *deno run --allow-read --allow-net index.ts* in the app_generator folder.
+* Run *deno run --allow-read --allow-net index.ts* in the backend folder.
 
 ## YAML FILE FORMAT
 * All types must be inside the *types* list.
