@@ -2,7 +2,7 @@ version: "3.2"
 
 services:
   backend:
-    image: hayd/ubuntu-deno:1.5.2
+    image: denoland/deno:1.12.0
     environment:
       - MONGO_URL=mongodb://mongodb
       - YAML_FILE=./test.yaml
@@ -17,6 +17,23 @@ services:
     command: >
       bash -c "cd /usr/src/backend
       && deno run --allow-read --allow-net index.ts"
+
+  frontend:
+    image: denoland/deno:1.12.0
+    environment:
+      - YAML_FILE=./test.yaml
+    depends_on:
+      - backend
+    volumes:
+      - type: bind
+        source: .
+        target: /usr/src
+    ports:
+      - 8080:8080
+    command: >
+      bash -c "cd /usr/src/frontend
+      && deno run -A https://deno.land/x/aleph/install.ts
+      && aleph dev"
 
   mongodb:
     image: mongo:latest

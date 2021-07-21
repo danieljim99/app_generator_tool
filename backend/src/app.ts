@@ -274,8 +274,6 @@ const createSchema = async (types: Object[]) => {
 };
 
 export const app = async () => {
-    const encoder = new TextEncoder();
-    
     const types = (await readYaml(config().YAML_FILE)).types;
 
     if (!types || types.length === 0) {

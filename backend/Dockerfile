@@ -1,4 +1,4 @@
-FROM hayd/ubuntu-deno:1.5.2
+FROM denoland/deno:1.12.0
 
 RUN mkdir -p /usr/src/backend
 WORKDIR /usr/src/backend
