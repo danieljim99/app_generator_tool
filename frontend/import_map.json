@@ -3,6 +3,7 @@
     "~/": "./",
     "aleph/": "https://deno.land/x/aleph@v0.3.0-alpha.33/",
     "aleph/types": "https://deno.land/x/aleph@v0.3.0-alpha.33/types.ts",
+    "@apollo/client": "https://cdn.skypack.dev/pin/@apollo/client@v3.3.21-ZF820lQ7WxifyWRQR1NX/@apollo/client.js",
     "framework": "https://deno.land/x/aleph@v0.3.0-alpha.33/framework/core/mod.ts",
     "framework/react": "https://deno.land/x/aleph@v0.3.0-alpha.33/framework/react/mod.ts",
     "react": "https://esm.sh/react@17.0.2",

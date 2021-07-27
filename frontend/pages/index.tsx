@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
-import { useDeno } from 'framework/react';
+import React, { useEffect, useState } from 'react';
+import { useDeno, useRouter } from 'framework/react';
 import Logo from '~/components/logo.tsx';
 import getTypes from '~/lib/getTypes.ts';
 
 const Home = () => {
+  const { pathname } = useRouter();
+  const yamlTypes = useDeno(async () => await getTypes());
+
   const [types, setTypes] = useState<string[] | undefined>(undefined);
 
-  !types && setTypes(useDeno(async () => await getTypes()));
+  useEffect(() => {
+    !types && setTypes(yamlTypes);
+  }, [types]);
 
   return (
     <div className="page">
@@ -20,7 +25,7 @@ const Home = () => {
       {types &&
         <ul>
           {types.map((type, index) =>
-            <li key={index}><a href={`http://localhost:8080/${type}`}>{type}</a></li>
+            <li key={index}><a href={`${pathname}${type}`}>{type}</a></li>
           )}
         </ul>
       }
