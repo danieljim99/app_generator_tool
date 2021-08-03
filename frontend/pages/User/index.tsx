@@ -1,29 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'framework/react';
-import getEnv from '~/lib/getEnv.ts';
+import useQuery from '~/lib/useQuery.ts';
+
+interface UserType {
+  _id: string;
+  name: string;
+  email: string;
+}
 
 const Index = () => {
+  const [items, setItems] = useState<undefined | UserType[]>(undefined);
+  const [error, setError] = useState<boolean>(false);
+
   const { pathname } = useRouter();
-  const apiEndpoint = getEnv("API_URL");
+  
+  const response = useQuery("{getAllUser{_id,name,email}}");
 
-  const users = [
-    {_id: "1", name: "User 1"},
-    {_id: "2", name: "User 2"},
-    {_id: "3", name: "User 3"},
-    {_id: "4", name: "User 4"}
-  ];
-
-  try {
-    fetch(apiEndpoint, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({"query": "{getAllUser{_id,name}}"})
-    })
-    .then(result => console.log(result))
-    .catch(error => console.log(error));
-  } catch (error) {
-    console.log(error);
-  }
+  useEffect(() => {
+    if (!items && !response) setError(true);
+    if (!items && response) setItems(response.getAllUser);
+  }, [response, items]);
 
   return (
     <div className="page">
@@ -32,9 +28,13 @@ const Index = () => {
         <link rel="stylesheet" href="../../style/index.css" />
       </head>
       <h1>This is the User Page</h1>
-      <ul>
-        {users.map(user => <li key={user._id}><a href={`${pathname}/${user._id}`}>{user.name}</a></li>)}
-      </ul>
+      {error ?
+        <p>{`Error fetching the data`}</p>
+      : items &&
+        <ul>
+          {items.map(item => <li key={item._id}><a href={`${pathname}/${item._id}`}>{item._id}</a></li>)}
+        </ul>
+      }
     </div>
   );
 };

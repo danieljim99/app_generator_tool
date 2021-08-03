@@ -22,7 +22,7 @@ services:
     image: denoland/deno:1.12.0
     environment:
       - YAML_FILE=./test.yaml
-      - API_URL=http://localhost:5000/graphql
+      - API_URL=http://backend:5000/graphql
     depends_on:
       - backend
     volumes:

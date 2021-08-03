@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'framework/react';
+import useQuery from '~/lib/useQuery.ts';
+
+interface ActivityType {
+  _id: string;
+  name: string;
+}
 
 const Index = () => {
-  const { pathname } = useRouter();
+  const [items, setItems] = useState<undefined | ActivityType[]>(undefined);
+  const [error, setError] = useState<boolean>(false);
 
-  const activities = [
-    {_id: "1", name: "Activity 1"},
-    {_id: "2", name: "Activity 2"},
-    {_id: "3", name: "Activity 3"},
-    {_id: "4", name: "Activity 4"}
-  ];
+  const { pathname } = useRouter();
+  
+  const response = useQuery("{getAllActivity{_id,name}}");
+
+  useEffect(() => {
+    if (!items && !response) setError(true);
+    if (!items && response) setItems(response.getAllActivity);
+  }, [response, items]);
 
   return (
     <div className="page">
@@ -18,11 +27,13 @@ const Index = () => {
         <link rel="stylesheet" href="../../style/index.css" />
       </head>
       <h1>This is the Activity Page</h1>
-      <ul>
-        {activities.map(activity =>
-          <li key={activity._id}><a href={`${pathname}/${activity._id}`}>{`${activity.name}`}</a></li>
-        )}
-      </ul>
+      {error ?
+        <p>{`Error fetching the data`}</p>
+      : items &&
+        <ul>
+          {items.map(item => <li key={item._id}><a href={`${pathname}/${item._id}`}>{item._id}</a></li>)}
+        </ul>
+      }
     </div>
   );
 };
