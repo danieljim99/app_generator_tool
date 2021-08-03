@@ -1,17 +1,10 @@
 import React from 'react';
 import { useRouter } from 'framework/react';
-import { gql, useQuery } from '@apollo/client';
-
-const GET_ALL_USER = gql`
-  query getAllUser {
-    _id
-    name
-    email
-  }
-`;
+import getEnv from '~/lib/getEnv.ts';
 
 const Index = () => {
   const { pathname } = useRouter();
+  const apiEndpoint = getEnv("API_URL");
 
   const users = [
     {_id: "1", name: "User 1"},
@@ -20,12 +13,17 @@ const Index = () => {
     {_id: "4", name: "User 4"}
   ];
 
-  const {data, loading, error} = useQuery(GET_ALL_USER);
-
-  if (loading) return (<div className="page">Loading...</div>);
-  if (error) return (<div className="page">{`Error! ${error.message}`}</div>);
-
-  console.log(data);
+  try {
+    fetch(apiEndpoint, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({"query": "{getAllUser{_id,name}}"})
+    })
+    .then(result => console.log(result))
+    .catch(error => console.log(error));
+  } catch (error) {
+    console.log(error);
+  }
 
   return (
     <div className="page">
