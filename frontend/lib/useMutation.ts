@@ -1,14 +1,14 @@
 import { useDeno } from 'framework/react';
 import { getEnv } from '~/lib/index.ts';
 
-const useQuery = (query: string) => {
+const useMutation = (mutation: string) => {
   const apiEndpoint = getEnv("API_URL");
 
   const response = useDeno(async () => await fetch(
     apiEndpoint, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({"query": query})
+      body: JSON.stringify({"query": `mutation${mutation}`})
     }
   ));
     
@@ -17,4 +17,4 @@ const useQuery = (query: string) => {
   return obj?.data;
 };
 
-export default useQuery;
+export default useMutation;

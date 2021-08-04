@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDeno, useRouter } from 'framework/react';
 import Logo from '~/components/logo.tsx';
-import getTypes from '~/lib/getTypes.ts';
+import { getTypes } from '~/lib/index.ts';
 
 const Home = () => {
   const { pathname } = useRouter();

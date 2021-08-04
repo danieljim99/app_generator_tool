@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'framework/react';
-import useQuery from '~/lib/useQuery.ts';
-
-interface UserType {
-  _id: string;
-  name: string;
-  email: string;
-}
+import { useQuery } from '~/lib/index.ts';
 
 const Index = () => {
-  const [items, setItems] = useState<undefined | UserType[]>(undefined);
+  const [items, setItems] = useState<undefined | {_id: string}[]>(undefined);
   const [error, setError] = useState<boolean>(false);
 
   const { pathname } = useRouter();
   
-  const response = useQuery("{getAllUser{_id,name,email}}");
+  const response = useQuery("{getAllUser{_id}}");
 
   useEffect(() => {
     if (!items && !response) setError(true);
@@ -29,7 +23,7 @@ const Index = () => {
       </head>
       <h1>This is the User Page</h1>
       {error ?
-        <p>{`Error fetching the data`}</p>
+        <p>{`Error fetching the items`}</p>
       : items &&
         <ul>
           {items.map(item => <li key={item._id}><a href={`${pathname}/${item._id}`}>{item._id}</a></li>)}

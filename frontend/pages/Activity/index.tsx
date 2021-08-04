@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'framework/react';
-import useQuery from '~/lib/useQuery.ts';
-
-interface ActivityType {
-  _id: string;
-  name: string;
-}
+import { useQuery } from '~/lib/index.ts';
 
 const Index = () => {
-  const [items, setItems] = useState<undefined | ActivityType[]>(undefined);
+  const [items, setItems] = useState<undefined | {_id: string}[]>(undefined);
   const [error, setError] = useState<boolean>(false);
 
   const { pathname } = useRouter();
   
-  const response = useQuery("{getAllActivity{_id,name}}");
+  const response = useQuery("{getAllActivity{_id}}");
 
   useEffect(() => {
     if (!items && !response) setError(true);
@@ -28,7 +23,7 @@ const Index = () => {
       </head>
       <h1>This is the Activity Page</h1>
       {error ?
-        <p>{`Error fetching the data`}</p>
+        <p>{`Error fetching the items`}</p>
       : items &&
         <ul>
           {items.map(item => <li key={item._id}><a href={`${pathname}/${item._id}`}>{item._id}</a></li>)}
