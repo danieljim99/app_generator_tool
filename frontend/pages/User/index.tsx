@@ -21,13 +21,14 @@ const Index = () => {
         <title>App Generator Tool</title>
         <link rel="stylesheet" href="../../style/index.css" />
       </head>
-      <h1>This is the User Page</h1>
+      <h1 className="Title">This is the User Page</h1>
       {error ?
         <p>{`Error fetching the items`}</p>
       : items &&
-        <ul>
-          {items.map(item => <li key={item._id}><a href={`${pathname}/${item._id}`}>{item._id}</a></li>)}
-        </ul>
+        <div className="Items">
+          {items.map(item => <div className="Item" key={item._id}><a href={`${pathname}/${item._id}`}>{item._id}</a></div>)}
+          <div className="Item"><a href={`${pathname}/new`}>{"+"}</a></div>
+        </div>
       }
     </div>
   );

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDeno, useRouter } from 'framework/react';
-import Logo from '~/components/logo.tsx';
 import { getTypes } from '~/lib/index.ts';
 
 const Home = () => {
@@ -14,20 +13,19 @@ const Home = () => {
   }, [types]);
 
   return (
-    <div className="page">
+    <div className="IndexPage">
       <head>
         <title>App Generator Tool</title>
         <link rel="stylesheet" href="../style/index.css" />
       </head>
-      <p className="logo"><Logo /></p>
       <h1>App Generator Tool</h1>
-      <h2>This is the Home Page</h2>
+      <h1 className="Title">This is the Home Page</h1>
       {types &&
-        <ul>
+        <div className="Items">
           {types.map((type, index) =>
-            <li key={index}><a href={`${pathname}${type}`}>{type}</a></li>
+            <div className="Item" key={index}><a href={`${pathname}${type}`}>{type}</a></div>
           )}
-        </ul>
+        </div>
       }
     </div>
   );

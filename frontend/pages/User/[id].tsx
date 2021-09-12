@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '~/lib/index.ts';
 interface User {
   _id: string;
   name: string;
-  email: string;
+  age: number;
 }
 
 const User = () => {
@@ -13,23 +13,31 @@ const User = () => {
   const [error, setError] = useState<boolean>(false);
 
   const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [age, setAge] = useState<number>(0);
 
   const { params } = useRouter();
 
-  const response = useQuery(`{getUser(_id:"${params.id}"){_id,name,email}}`);
+  const isNew = params.id === "new";
+
+  const response = !isNew && useQuery(`{getUser(_id:"${params.id}"){_id,name,age}}`);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    useMutation(`{updateUser(_id:"${params.id}",UserInput:{name:"${name}",email:"${email}"}){_id}}`);
     event.preventDefault();
+    useMutation(`{updateUser(_id:"${params.id}",UserInput:{name:"${name}",age:"${age}"}){_id}}`);
   };
 
   useEffect(() => {
-    if (!data && !response) setError(true);
+    if (!data && !response && !isNew) setError(true);
     if (!data && response) {
       setData(response.getUser);
       setName(response.getUser.name);
-      setEmail(response.getUser.email);      
+      setAge(response.getUser.age);      
+    } else if (!data && isNew) {
+      setData({
+        _id: "",
+        name: "",
+        age: 0
+      });
     }
   }, [response, data]);
 
@@ -39,25 +47,28 @@ const User = () => {
         <title>App Generator Tool</title>
         <link rel="stylesheet" href="../../style/index.css" />
       </head>
-      <h1>{`This is the info of user with id:${params.id} page`}</h1>
+      <h1 className="Title">{isNew ? `This is the new User page` : `This is the Update User page`}</h1>
       {error ?
         <p>{`Error fetching the data`}</p>
       : data &&
-        <form onSubmit={onSubmit}>
-          <p>
-            {`_id: `}
+        <form className="Form" onSubmit={onSubmit}>
+          {!isNew && <p className="FormP">
+            <div>{`_id: `}</div>
             <input type="text" readOnly={true} value={data._id} />
-          </p>
-          <p>
-            {`name: `}
+          </p>}
+          <p className="FormP">
+            <div>{`name: `}</div>
             <input type="text" value={name} onChange={(event: any) => setName(event.target.value)} />
           </p>
-          <p>
-            {`email: `}
-            <input type="text" value={email} onChange={(event: any) => setEmail(event.target.value)} />
+          <p className="FormP">
+            <div>{`age: `}</div>
+            <input type="number" value={age} onChange={(event: any) => setAge(event.target.value)} />
           </p>
           <br />
-          <button type="submit">{`Guardar cambios`}</button>
+          <div className="ButtonRow">
+            <button className="SubmitButton" type="submit">{isNew ? `Add User` : `Save changes`}</button>
+            {!isNew && <button className="SubmitButton">{`Remove`}</button>}
+          </div>
         </form>
       }
     </div>
