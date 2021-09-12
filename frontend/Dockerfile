@@ -5,7 +5,7 @@ WORKDIR /usr/src/frontend
 
 COPY . .
 
-RUN deno run -A https://deno.land/x/aleph/install.ts
+RUN deno run -A https://deno.land/x/aleph@v0.3.0-alpha.33/install.ts 0.3.0-alpha.33
 
 RUN aleph dev
 
