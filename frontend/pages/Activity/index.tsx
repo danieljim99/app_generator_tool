@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'framework/react';
-import { useQuery } from '~/lib/index.ts';
+import { useQuery } from '@apollo/client';
+import { GET_ALL_ACTIVITY } from '~/api/queries.ts';
 
 const Index = () => {
   const [items, setItems] = useState<undefined | {_id: string}[]>(undefined);
-  const [error, setError] = useState<boolean>(false);
+  const [queryError, setQueryError] = useState<boolean>(false);
 
   const { pathname } = useRouter();
-  
-  const response = useQuery("{getAllActivity{_id}}");
 
-  useEffect(() => {
-    if (!items && !response) setError(true);
-    if (!items && response) setItems(response.getAllActivity);
-  }, [response, items]);
+  const { data, loading, error } = useQuery(GET_ALL_ACTIVITY);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) setQueryError(true);
+
+  !loading && !error && setItems(data.getAllActivity);
 
   return (
     <div className="page">
@@ -22,7 +23,7 @@ const Index = () => {
         <link rel="stylesheet" href="../../style/index.css" />
       </head>
       <h1 className="Title">This is the Activity Page</h1>
-      {error ?
+      {queryError ?
         <p>{`Error fetching the items`}</p>
       : items &&
         <div className="Items">

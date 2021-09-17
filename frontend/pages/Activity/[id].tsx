@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'framework/react';
-import { useMutation, useQuery } from '~/lib/index.ts';
+import { useMutation, useQuery } from '@apollo/client';
+import { GET_ACTIVITY, UPDATE_ACTIVITY, REMOVE_ACTIVITY } from '~/api/queries.ts';
 
 interface Activity {
   _id: string;
@@ -8,34 +9,58 @@ interface Activity {
 }
 
 const Activity = () => {
-  const [data, setData] = useState<undefined | Activity>(undefined);
-  const [error, setError] = useState<boolean>(false);
+  const [itemData, setItemData] = useState<undefined | Activity>(undefined);
+  const [queryError, setQueryError] = useState<boolean>(false);
 
   const [name, setName] = useState<string>("");
+
+  const [updateActivity] = useMutation(UPDATE_ACTIVITY);
+  const [removeActivity] = useMutation(REMOVE_ACTIVITY);
 
   const { params } = useRouter();
 
   const isNew = params.id === "new";
 
-  const response = !isNew && useQuery(`{getActivity(_id:"${params.id}"){_id,name}}`);
-
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    useMutation(`{updateActivity(_id:"${params.id}",ActivityInput:{name:"${name}"){_id}}`);
     event.preventDefault();
+    updateActivity({
+      variables: {
+        _id: params.id,
+        ActivityInput: { name: name }
+      }
+    })
+    .catch(() => setQueryError(true));
   };
 
+  const onRemove = () => {
+    removeActivity({
+      variables: { _id: params.id }
+    })
+    .then(() => useRouter().push(`/Activity`))
+    .catch(() => setQueryError(true));
+  }
+
+  const { data, loading, error } = useQuery(
+    GET_ACTIVITY,
+    {
+      variables: { _id: params.id },
+      skip: isNew
+    }
+  );
+
+  if (loading) return <div>Loading...</div>;
+  if (error) setQueryError(true);
+
+  !loading && !error && !isNew && setItemData(data.GetActivity);
+
   useEffect(() => {
-    if (!data && !response && !isNew) setError(true);
-    if (!data && response) {
-      setData(response.getActivity);
-      setName(response.getActivity.name);
-    } else if (!data && isNew) {
-      setData({
+    if (isNew) {
+      setItemData({
         _id: "",
         name: ""
       });
     }
-  }, [response, data]);
+  }, [isNew]);
 
   return (
     <div className="page">
@@ -44,13 +69,13 @@ const Activity = () => {
         <link rel="stylesheet" href="../../style/index.css" />
       </head>
       <h1 className="Title">{isNew ? `This is the new Activity page` : `This is the Update Activity page`}</h1>
-      {error ?
+      {queryError ?
         <p>{`Error fetching the data`}</p>
-      : data &&
+      : itemData &&
         <form className="Form" onSubmit={onSubmit}>
           {!isNew && <p className="FormP">
             <div>{`_id: `}</div>
-            <input type="text" readOnly={true} value={data._id} />
+            <input type="text" readOnly={true} value={itemData._id} />
           </p>}
           <p className="FormP">
             <div>{`name: `}</div>
@@ -59,7 +84,7 @@ const Activity = () => {
           <br />
           <div className="ButtonRow">
             <button className="SubmitButton" type="submit">{isNew ? `Add Activity` : `Save changes`}</button>
-            {!isNew && <button className="SubmitButton">{`Remove`}</button>}
+            {!isNew && <button className="SubmitButton" onClick={() => onRemove()}>{`Remove`}</button>}
           </div>
         </form>
       }

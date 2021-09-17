@@ -1,16 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDeno, useRouter } from 'framework/react';
 import { getTypes } from '~/lib/index.ts';
 
 const Home = () => {
   const { pathname } = useRouter();
   const yamlTypes = useDeno(async () => await getTypes());
-
-  const [types, setTypes] = useState<string[] | undefined>(undefined);
-
-  useEffect(() => {
-    !types && setTypes(yamlTypes);
-  }, [types]);
 
   return (
     <div className="IndexPage">
@@ -20,9 +14,9 @@ const Home = () => {
       </head>
       <h1>App Generator Tool</h1>
       <h1 className="Title">This is the Home Page</h1>
-      {types &&
+      {yamlTypes &&
         <div className="Items">
-          {types.map((type, index) =>
+          {yamlTypes.map((type: string, index: number) =>
             <div className="Item" key={index}><a href={`${pathname}${type}`}>{type}</a></div>
           )}
         </div>
