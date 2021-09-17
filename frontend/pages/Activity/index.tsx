@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'framework/react';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_ACTIVITY } from '~/api/queries.ts';
