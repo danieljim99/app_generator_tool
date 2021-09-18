@@ -1,33 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'aleph/react';
+import { getInitialValue, getInputType, getQueryInput } from '~/lib/index.ts';
 
-interface Activity {
-  _id: string;
-  name: string;
-}
-
-const ItemPage = (props: { apiUrl: string }) => {
-  const [itemData, setItemData] = useState<undefined | Activity>(undefined);
-  const [obj, setObj] = useState<any>(undefined);
-  const [error, setError] = useState<boolean>(false);
-
-  const [name, setName] = useState<string>("");
-
+const ItemPage = (props: { apiUrl: string, yamlTypes: any[] }) => {
   const { params } = useRouter();
 
   const typeName = params.typeName;
+
+  const type = props.yamlTypes?.find(type => type.name === typeName);
+
+  const [itemData, setItemData] = useState<any>(undefined);
+  const [obj, setObj] = useState<any>(undefined);
+  const [error, setError] = useState<boolean>(false);
+
+  const [values, setValues] = useState<any>({});
 
   const isNew = params.id === "new";
 
   const createHandler = (event: any) => {
     event.preventDefault();
+    let valuesObj = {...values};
+    delete valuesObj._id;
     fetch(
       props.apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "text/plain",
         },
-        body: JSON.stringify({"query": `mutation{create${typeName}(${typeName}Input: {name: "${name}"}){_id}}`})
+        body: JSON.stringify({"query": `mutation{create${typeName}(${typeName}Input: ${getQueryInput(valuesObj, type.fields)}){_id}}`})
       }
     ).then(() => alert("Success"))
     .catch(() => setError(true));
@@ -35,13 +35,15 @@ const ItemPage = (props: { apiUrl: string }) => {
 
   const updateHandler = (event: any) => {
     event.preventDefault();
+    let valuesObj = {...values};
+    delete valuesObj._id;
     fetch(
       props.apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "text/plain",
         },
-        body: JSON.stringify({"query": `mutation{update${typeName}(_id: "${params.id}", ${typeName}Input: {name: "${name}"}){_id}}`})
+        body: JSON.stringify({"query": `mutation{update${typeName}(_id: "${params.id}", ${typeName}Input: ${getQueryInput(valuesObj, type.fields)}){_id}}`})
       }
     ).then(() => alert("Success"))
     .catch(() => setError(true));
@@ -67,10 +69,12 @@ const ItemPage = (props: { apiUrl: string }) => {
 
   useEffect(() => {
     if (isNew) {
-      setItemData({
-        _id: "",
-        name: ""
+      let dataObject: any = {};
+      type.fields.forEach((field: any) => {
+        dataObject[field.name] = getInitialValue(field.type);
       });
+      console.log(dataObject);
+      setItemData(dataObject);
     } else {
       fetch(
         props.apiUrl, {
@@ -78,7 +82,7 @@ const ItemPage = (props: { apiUrl: string }) => {
           headers: {
             "Content-Type": "text/plain",
           },
-          body: JSON.stringify({"query": `{get${typeName}(_id: "${params.id}"){_id name}}`})
+          body: JSON.stringify({"query": `{get${typeName}(_id: "${params.id}"){${type.fields.map((field: any) => field.name)}}}`})
         }
       ).then((response: any) => response.json().then((object: any) => setObj(object)))
       .catch(() => setError(true));
@@ -86,7 +90,7 @@ const ItemPage = (props: { apiUrl: string }) => {
   }, [isNew]);
 
   useEffect(() => {
-    if (itemData) setName(itemData.name);
+    if (itemData) setValues(itemData);
   }, [itemData]);
 
   return (
@@ -102,12 +106,22 @@ const ItemPage = (props: { apiUrl: string }) => {
         <form className="Form">
           {!isNew && <p className="FormP">
             <div>{`_id: `}</div>
-            <input type="text" readOnly={true} value={itemData._id} />
+            <input type="text" readOnly={true} value={params.id} />
           </p>}
-          <p className="FormP">
-            <div>{`name: `}</div>
-            <input type="text" value={name} onChange={(event: any) => setName(event.target.value)} />
-          </p>
+          {type.fields.map((field: any, index: number) => {
+            if (index > 0) {
+              return (
+                <p className="FormP" key={index}>
+                  <div>{`${field.name}: `}</div>
+                  <input type={getInputType(field.type)} value={values[field.name]} onChange={(event: any) => {
+                    let valuesObj = {...values};
+                    valuesObj[field.name] = event.target.value;
+                    setValues(valuesObj);
+                  }} />
+                </p>
+              );
+            }
+          })}
           <br />
           <div className="ButtonRow">
             <button className="SubmitButton" onClick={(e) => isNew ? createHandler(e) : updateHandler(e)}>{isNew ? `Add ${typeName}` : `Save changes`}</button>

@@ -2,10 +2,10 @@ import { useDeno } from 'aleph/react';
 import { YamlLoader } from 'yaml_loader';
 
 const readYaml = async (path: string) => {
-    const yamlLoader = new YamlLoader();
-    let result = await yamlLoader.parseFile(path) as { types: any[] };
-    result.types = result.types.map(type => ({ ...type, fields: [{ name: '_id', type: "string" }, ...type.fields] }));
-    return result;
+  const yamlLoader = new YamlLoader();
+  let result = await yamlLoader.parseFile(path) as { types: any[] };
+  result.types = result.types.map(type => ({ ...type, fields: [{ name: '_id', type: "string" }, ...type.fields] }));
+  return result;
 };
 
 const getTypes = async () => {
@@ -15,7 +15,7 @@ const getTypes = async () => {
 
   const content = await readYaml(yamlPath);
 
-  return content.types.map(type => type.name) as string[];
+  return content.types;
 };
 
 export default getTypes;

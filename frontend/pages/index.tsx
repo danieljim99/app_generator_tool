@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useDeno } from 'aleph/react';
 
-const Home = (props: { yamlTypes: string[] }) => {
+const Home = (props: { yamlTypes: any[] }) => {
   const { pathname } = useRouter();
 
   return (
@@ -14,8 +14,8 @@ const Home = (props: { yamlTypes: string[] }) => {
       <h1 className="Title">This is the Home Page</h1>
       {props.yamlTypes &&
         <div className="Items">
-          {props.yamlTypes.map((type: string, index: number) =>
-            <div className="Item" key={index}><a href={`${pathname}${type}`}>{type}</a></div>
+          {props.yamlTypes.map((type: any, index: number) =>
+            <div className="Item" key={index}><a href={`${pathname}${type.name}`}>{type.name}</a></div>
           )}
         </div>
       }
