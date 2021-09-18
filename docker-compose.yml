@@ -19,10 +19,10 @@ services:
       && deno run --allow-read --allow-net index.ts"
 
   frontend:
-    image: denoland/deno:1.12.0
+    image: denoland/deno:1.14.0
     environment:
       - YAML_FILE=./test.yaml
-      - API_URL=http://backend:5000/graphql
+      - API_URL=http://localhost:5000/graphql
     depends_on:
       - backend
     volumes:
@@ -33,7 +33,7 @@ services:
       - 8080:8080
     command: >
       bash -c "cd /usr/src/frontend
-      && deno run -A https://deno.land/x/aleph@v0.3.0-alpha.33/install.ts 0.3.0-alpha.33
+      && deno run -A https://deno.land/x/aleph/install.ts
       && aleph dev"
 
   mongodb:
