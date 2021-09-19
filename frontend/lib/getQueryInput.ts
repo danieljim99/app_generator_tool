@@ -1,12 +1,12 @@
-const parseType = (value: string, type: string) => {
+const parseType = (value: string | boolean, type: string) => {
   switch(type) {
     default:
     case "string":
       return `"${value}"`;
     case "number":
-      return parseInt(value);
+      return parseInt(value as string);
     case "boolean":
-      return value === "true";
+      return value === true;
   }
 };
 

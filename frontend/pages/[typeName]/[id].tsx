@@ -6,6 +6,7 @@ const ItemPage = (props: { apiUrl: string, yamlTypes: any[] }) => {
   const { params } = useRouter();
 
   const typeName = params.typeName;
+  const id = params.id;
 
   const type = props.yamlTypes?.find(type => type.name === typeName);
 
@@ -15,7 +16,7 @@ const ItemPage = (props: { apiUrl: string, yamlTypes: any[] }) => {
 
   const [values, setValues] = useState<any>({});
 
-  const isNew = params.id === "new";
+  const isNew = id === "new";
 
   const createHandler = (event: any) => {
     event.preventDefault();
@@ -29,7 +30,8 @@ const ItemPage = (props: { apiUrl: string, yamlTypes: any[] }) => {
         },
         body: JSON.stringify({"query": `mutation{create${typeName}(${typeName}Input: ${getQueryInput(valuesObj, type.fields)}){_id}}`})
       }
-    ).then(() => alert("Success"))
+    ).then((response: any) => response.json()
+      .then((obj: any) => window.location.href = `http://localhost:8080/${typeName}/${obj.data?.[`create${typeName}`]._id}`))
     .catch(() => setError(true));
   };
 
@@ -43,7 +45,7 @@ const ItemPage = (props: { apiUrl: string, yamlTypes: any[] }) => {
         headers: {
           "Content-Type": "text/plain",
         },
-        body: JSON.stringify({"query": `mutation{update${typeName}(_id: "${params.id}", ${typeName}Input: ${getQueryInput(valuesObj, type.fields)}){_id}}`})
+        body: JSON.stringify({"query": `mutation{update${typeName}(_id: "${id}", ${typeName}Input: ${getQueryInput(valuesObj, type.fields)}){_id}}`})
       }
     ).then(() => alert("Success"))
     .catch(() => setError(true));
@@ -57,9 +59,9 @@ const ItemPage = (props: { apiUrl: string, yamlTypes: any[] }) => {
         headers: {
           "Content-Type": "text/plain",
         },
-        body: JSON.stringify({"query": `mutation{remove${typeName}(_id: "${params.id}"){_id}}`})
+        body: JSON.stringify({"query": `mutation{remove${typeName}(_id: "${id}"){_id}}`})
       }
-    ).then(() => alert("Success"))
+    ).then(() => window.location.href = `http://localhost:8080/${typeName}`)
     .catch((e) => setError(true));
   };
 
@@ -73,7 +75,6 @@ const ItemPage = (props: { apiUrl: string, yamlTypes: any[] }) => {
       type.fields.forEach((field: any) => {
         dataObject[field.name] = getInitialValue(field.type);
       });
-      console.log(dataObject);
       setItemData(dataObject);
     } else {
       fetch(
@@ -82,7 +83,7 @@ const ItemPage = (props: { apiUrl: string, yamlTypes: any[] }) => {
           headers: {
             "Content-Type": "text/plain",
           },
-          body: JSON.stringify({"query": `{get${typeName}(_id: "${params.id}"){${type.fields.map((field: any) => field.name)}}}`})
+          body: JSON.stringify({"query": `{get${typeName}(_id: "${id}"){${type.fields.map((field: any) => field.name)}}}`})
         }
       ).then((response: any) => response.json().then((object: any) => setObj(object)))
       .catch(() => setError(true));
@@ -106,16 +107,16 @@ const ItemPage = (props: { apiUrl: string, yamlTypes: any[] }) => {
         <form className="Form">
           {!isNew && <p className="FormP">
             <div>{`_id: `}</div>
-            <input type="text" readOnly={true} value={params.id} />
+            <input type="text" readOnly={true} value={id} />
           </p>}
           {type.fields.map((field: any, index: number) => {
             if (index > 0) {
               return (
                 <p className="FormP" key={index}>
                   <div>{`${field.name}: `}</div>
-                  <input type={getInputType(field.type)} value={values[field.name]} onChange={(event: any) => {
+                  <input type={getInputType(field.type)} value={values[field.name]} checked={values[field.name]} onChange={(event: any) => {
                     let valuesObj = {...values};
-                    valuesObj[field.name] = event.target.value;
+                    valuesObj[field.name] = field.type === "boolean" ? event.target.checked : event.target.value;
                     setValues(valuesObj);
                   }} />
                 </p>

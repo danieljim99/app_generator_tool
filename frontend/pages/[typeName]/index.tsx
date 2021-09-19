@@ -36,9 +36,9 @@ const Index = (props: { apiUrl: string }) => {
       <h1 className="Title">{`This is the ${typeName} page`}</h1>
       {error ?
         <p>{`Error fetching the items`}</p>
-      : items &&
+      : 
         <div className="Items">
-          {items.map(item => <div className="Item" key={item._id}><a href={`${pathname}/${item._id}`}>{item._id}</a></div>)}
+          {items && items.map(item => <div className="Item" key={item._id}><a href={`${pathname}/${item._id}`}>{item._id}</a></div>)}
           <div className="Item"><a href={`${pathname}/new`}>{"+"}</a></div>
         </div>
       }
