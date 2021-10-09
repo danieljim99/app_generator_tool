@@ -33,6 +33,9 @@ const Index = (props: { apiUrl: string }) => {
         <title>App Generator Tool</title>
         <link rel="stylesheet" href="../../style/index.css" />
       </head>
+      <div>
+        {" > "}<a href="/">{`Home`}</a>
+      </div>
       <h1 className="Title">{`This is the ${typeName} page`}</h1>
       {error ?
         <p>{`Error fetching the items`}</p>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter, useDeno } from 'aleph/react';
+import React from 'react';
+import { useRouter } from 'aleph/react';
 
 const Home = (props: { yamlTypes: any[] }) => {
   const { pathname } = useRouter();

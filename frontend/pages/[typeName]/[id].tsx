@@ -100,6 +100,9 @@ const ItemPage = (props: { apiUrl: string, yamlTypes: any[] }) => {
         <title>App Generator Tool</title>
         <link rel="stylesheet" href="../../style/index.css" />
       </head>
+      <div>
+        {" > "}<a href="/">{`Home`}</a> {" > "} <a href={`/${typeName}`}>{`${typeName}`}</a>
+      </div>
       <h1 className="Title">{isNew ? `This is the new ${typeName} page` : `This is the Update ${typeName} page`}</h1>
       {error ?
         <p>{`Error fetching the data`}</p>
