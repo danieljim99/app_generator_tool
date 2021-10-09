@@ -2,5 +2,5 @@
 
 ## USAGE
 * Create the *yaml* file to use folowing the *sample.yaml* file.
-* Create and fill the *.env* file in the frontend and backend folders following the *.env.sample* files.
+* Create and fill the *.env* files in the frontend and backend folders following the *.env.sample* files.
 * Run *docker-compose up --build* in the root folder.
