@@ -262,6 +262,7 @@ const createSchema = async (types: Object[]) => {
           const bodyValue = await body.value;
           const result = await executeSchema(bodyValue.query);
           response.body = result;
+          response.headers.set("Access-Control-Allow-Origin", "http://localhost:8080");
         } else {
           response.body = "Query Unknown";
         }
