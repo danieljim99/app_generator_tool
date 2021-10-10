@@ -1,7 +1,7 @@
 # APP GENERATOR TOOL
 
 ## REQUIREMENTS
-* You need to have *docker-compose* installed in your system in order to run the command.
+* You need *docker-compose* installed in your system in order to run the command.
 
 ## USAGE
 * Create the *yaml* file to use folowing the *sample.yaml* file.
