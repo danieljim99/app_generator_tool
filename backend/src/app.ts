@@ -61,7 +61,9 @@ const readYaml = async (path: string) => {
                         field.hasOwnProperty("name") && typeof(field.name) !== "string" ||
                         field.hasOwnProperty("type") && typeof(field.type) !== "string" ||
                         field.hasOwnProperty("type") && typeof(field.type) === "string" && !availableTypes.includes(field.type)) {
-                        throw new Error(`The 'fields' field must have a yaml list of a 'name' field of type 'string' and a 'type' field of type 'string' using one of the following values: ${availableTypes.toString()}`);
+                        throw new Error(
+                            `The 'fields' field must have a yaml list of a 'name' field of type 'string' and a 'type' field of type 'string' using one of the following values: ${availableTypes.toString()}`
+                        );
                     }
                 });
                 names.push(type.name);

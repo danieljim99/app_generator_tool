@@ -26,7 +26,12 @@ const readYaml = async (path: string) => {
     } else {
       let names: string[] = [];
       result.types.forEach((type: any, index: number) => {
-        if (!type.hasOwnProperty("name") || !type.hasOwnProperty("fields") || type.hasOwnProperty("name") && typeof(type.name) !== "string" || type.hasOwnProperty("fields") && typeof(type.fields) !== "object") {
+        if (
+          !type.hasOwnProperty("name") ||
+          !type.hasOwnProperty("fields") ||
+          type.hasOwnProperty("name") && typeof(type.name) !== "string" ||
+          type.hasOwnProperty("fields") && typeof(type.fields) !== "object"
+        ) {
           throw new Error("Each type must have a 'name' field of type 'string' and a 'fields' field with yaml list format");
         }
         if ((type.name as string).charAt(0) === (type.name as string).charAt(0).toLocaleLowerCase()) {
@@ -36,8 +41,16 @@ const readYaml = async (path: string) => {
           throw new Error("The value of the 'name' field of each type must be unique and cannot be used for more than one type at the same time");
         }
         type.fields.forEach((field: any) => {
-          if (!field.hasOwnProperty("name") || !field.hasOwnProperty("type") || field.hasOwnProperty("name") && typeof(field.name) !== "string" || field.hasOwnProperty("type") && typeof(field.type) !== "string" || field.hasOwnProperty("type") && typeof(field.type) === "string" && !availableTypes.includes(field.type)) {
-            throw new Error(`The 'fields' field must have a yaml list of a 'name' field of type 'string' and a 'type' field of type 'string' using one of the following values: ${availableTypes.toString()}`);
+          if (
+            !field.hasOwnProperty("name") ||
+            !field.hasOwnProperty("type") ||
+            field.hasOwnProperty("name") && typeof(field.name) !== "string" ||
+            field.hasOwnProperty("type") && typeof(field.type) !== "string" ||
+            field.hasOwnProperty("type") && typeof(field.type) === "string" && !availableTypes.includes(field.type)
+          ) {
+            throw new Error(
+              `The 'fields' field must have a yaml list of a 'name' field of type 'string' and a 'type' field of type 'string' using one of the following values: ${availableTypes.toString()}`
+            );
           }
         });
         names.push(type.name);
