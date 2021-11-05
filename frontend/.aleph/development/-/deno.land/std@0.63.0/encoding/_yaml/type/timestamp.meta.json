@@ -1,0 +1,9 @@
+{
+  "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/type/timestamp.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/type.ts"
+    }
+  ],
+  "sourceHash": "13db6d5c539e82c34ade72d767fd14aa22b93a0c"
+}

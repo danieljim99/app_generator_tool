@@ -1,0 +1,12 @@
+{
+  "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/type/bool.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/type.ts"
+    },
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/utils.ts"
+    }
+  ],
+  "sourceHash": "5fbaa966d7c99364db58b44e96bd1514e9214e3e"
+}

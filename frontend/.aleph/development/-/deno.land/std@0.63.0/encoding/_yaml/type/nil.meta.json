@@ -1,0 +1,9 @@
+{
+  "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/type/nil.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/type.ts"
+    }
+  ],
+  "sourceHash": "9c49f2e1efaf975d850935a8d71b1577ec282928"
+}

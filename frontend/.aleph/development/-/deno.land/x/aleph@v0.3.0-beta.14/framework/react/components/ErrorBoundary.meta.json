@@ -1,0 +1,12 @@
+{
+  "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/components/ErrorBoundary.ts",
+  "deps": [
+    {
+      "specifier": "https://esm.sh/react@17.0.2"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/helper.ts"
+    }
+  ],
+  "sourceHash": "673c40c20a637d93a5d6c2b19870da58ee7b93c5"
+}

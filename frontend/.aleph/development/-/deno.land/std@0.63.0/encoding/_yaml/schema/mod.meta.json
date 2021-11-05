@@ -1,0 +1,18 @@
+{
+  "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/schema/mod.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/schema/core.ts"
+    },
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/schema/default.ts"
+    },
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/schema/failsafe.ts"
+    },
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/schema/json.ts"
+    }
+  ],
+  "sourceHash": "479c5dd7b5bc6d6694551ea3c09ef860a043c98e"
+}

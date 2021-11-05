@@ -1,0 +1,15 @@
+{
+  "specifier": "/lib/getTypes.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/mod.ts"
+    },
+    {
+      "specifier": "https://deno.land/x/yaml_loader@v0.1.0/mod.ts"
+    }
+  ],
+  "sourceHash": "90924618ba6d1f0b9916ae935f19807bc358f3b6",
+  "denoHooks": [
+    "YkIN3TYHKS2kxSYsfPqTybXBlXw"
+  ]
+}

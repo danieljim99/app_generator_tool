@@ -1,0 +1,18 @@
+{
+  "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/loader/loader.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/error.ts"
+    },
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/mark.ts"
+    },
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/utils.ts"
+    },
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/loader/loader_state.ts"
+    }
+  ],
+  "sourceHash": "99d8e2da48ffa18bb41f93693a9049091b3b1021"
+}

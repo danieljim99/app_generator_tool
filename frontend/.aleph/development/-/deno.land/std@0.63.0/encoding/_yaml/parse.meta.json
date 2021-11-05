@@ -1,0 +1,9 @@
+{
+  "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/parse.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/loader/loader.ts"
+    }
+  ],
+  "sourceHash": "044d68cc3c1e8e3bdf740b42daf10a3f839f0bac"
+}

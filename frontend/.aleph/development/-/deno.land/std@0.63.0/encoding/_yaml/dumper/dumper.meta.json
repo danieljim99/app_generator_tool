@@ -1,0 +1,15 @@
+{
+  "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/dumper/dumper.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/error.ts"
+    },
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/utils.ts"
+    },
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/dumper/dumper_state.ts"
+    }
+  ],
+  "sourceHash": "341f84d7db6e38c7dae24ecc139c59074d34bb63"
+}

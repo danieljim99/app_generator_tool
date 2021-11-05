@@ -1,0 +1,15 @@
+{
+  "specifier": "https://deno.land/std@0.63.0/encoding/yaml.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/parse.ts"
+    },
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/stringify.ts"
+    },
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/schema/mod.ts"
+    }
+  ],
+  "sourceHash": "5b3267ff0555fed4f20a7ef0fe564263a12725c0"
+}

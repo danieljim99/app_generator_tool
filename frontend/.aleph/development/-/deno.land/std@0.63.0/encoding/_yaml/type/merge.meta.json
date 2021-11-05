@@ -1,0 +1,9 @@
+{
+  "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/type/merge.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/type.ts"
+    }
+  ],
+  "sourceHash": "cacda34b1528632a32fb999bf69204847741e04a"
+}

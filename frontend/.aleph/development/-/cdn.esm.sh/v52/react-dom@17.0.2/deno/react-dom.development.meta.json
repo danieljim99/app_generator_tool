@@ -1,0 +1,18 @@
+{
+  "specifier": "https://cdn.esm.sh/v52/react-dom@17.0.2/deno/react-dom.development.js",
+  "deps": [
+    {
+      "specifier": "https://cdn.esm.sh/v52/scheduler@0.20.2/deno/tracing.development.js"
+    },
+    {
+      "specifier": "https://cdn.esm.sh/v52/scheduler@0.20.2/deno/scheduler.development.js"
+    },
+    {
+      "specifier": "https://cdn.esm.sh/v52/object-assign@4.1.1/deno/object-assign.development.js"
+    },
+    {
+      "specifier": "https://cdn.esm.sh/v52/react@17.0.2/deno/react.development.js"
+    }
+  ],
+  "sourceHash": "0085de283614854cdd63d426f9b15e6a66986270"
+}

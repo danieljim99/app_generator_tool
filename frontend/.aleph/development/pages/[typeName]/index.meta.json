@@ -1,0 +1,31 @@
+{
+  "specifier": "/pages/[typeName]/index.tsx",
+  "deps": [
+    {
+      "specifier": "/style/index.css",
+      "hashLoc": 379
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/components/Head.ts"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/components/StyleLink.ts"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/components/Anchor.ts"
+    },
+    {
+      "specifier": "https://esm.sh/react@17.0.2"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/mod.ts"
+    }
+  ],
+  "sourceHash": "e0b51087144532b9ed4907b89a5a97eda1cc2a1f",
+  "jsxStaticClassNames": [
+    "page",
+    "Title",
+    "Items",
+    "Item"
+  ]
+}

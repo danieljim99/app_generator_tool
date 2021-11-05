@@ -1,0 +1,10 @@
+{
+  "specifier": "/style/index.css",
+  "deps": [
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/core/style.ts"
+    }
+  ],
+  "sourceHash": "63b32e0d056167b76df27b1894e0ce6fba0a9ad1",
+  "isStyle": true
+}

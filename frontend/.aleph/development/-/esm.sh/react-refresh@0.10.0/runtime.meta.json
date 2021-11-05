@@ -1,0 +1,9 @@
+{
+  "specifier": "https://esm.sh/react-refresh@0.10.0/runtime",
+  "deps": [
+    {
+      "specifier": "https://cdn.esm.sh/v53/react-refresh@0.10.0/deno/runtime.development.js"
+    }
+  ],
+  "sourceHash": "667d5db8977f9e83280d1466072a53c588823165"
+}

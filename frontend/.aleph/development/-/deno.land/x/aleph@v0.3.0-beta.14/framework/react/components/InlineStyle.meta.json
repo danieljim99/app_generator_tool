@@ -1,0 +1,18 @@
+{
+  "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/components/InlineStyle.ts",
+  "deps": [
+    {
+      "specifier": "https://esm.sh/react@17.0.2"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/core/style.ts"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/context.ts"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/helper.ts"
+    }
+  ],
+  "sourceHash": "70f2e39c8b60fbd6644b137dd0e2028173e27e13"
+}

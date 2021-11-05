@@ -1,0 +1,9 @@
+import { applyCSS } from "../-/deno.land/x/aleph@v0.3.0-beta.14/framework/core/style.js";
+export const css = "/* style/index.css */\nbody {\n  font-family:\n    \"Helvetica Neue\",\n    Helvetica,\n    Arial sans-serif;\n  font-size: 16px;\n}\nmain {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  height: 100vh;\n}\n.Title {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  color: white;\n  background-color: red;\n  padding: 5px;\n  border-radius: 3%;\n}\n.IndexPage {\n  justify-content: center;\n  align-items: center;\n  display: flex;\n  flex-direction: column;\n}\n.Items {\n  display: flex;\n  flex-direction: column;\n  font-weight: bold;\n}\n.Item {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  border: 1px solid black;\n  border-radius: 4%;\n  padding: 10px;\n  margin-bottom: 10px;\n}\n.Item > a {\n  text-decoration: none;\n  color: black;\n}\n.Item:hover {\n  background-color: #FEA2A2;\n}\n.Form {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n.FormP {\n  display: flex;\n}\n.FormP > div {\n  font-weight: bold;\n  margin-right: 10px;\n}\n.SubmitButton {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 5px;\n  width: fit-content;\n  font-weight: bold;\n  cursor: pointer;\n  background-color: white;\n  border: 1px solid black;\n  border-radius: 4%;\n}\n.SubmitButton:hover {\n  background-color: #FEA2A2;\n}\n.ButtonRow {\n  display: flex;\n  flex-direction: row;\n  width: 80%;\n  justify-content: space-between;\n}\n.ErrorModal {\n  display: flex;\n  flex-direction: column;\n  width: 60%;\n  border: 1px solid black;\n}\n.ErrorTitle {\n  display: flex;\n  padding: 20px;\n  background-color: red;\n  color: white;\n}\n.ErrorMessage {\n  display: flex;\n  padding: 20px;\n}";
+export default {
+};
+applyCSS("/style/index.css", {
+    css
+});
+
+//# sourceMappingURL=index.css.js.map

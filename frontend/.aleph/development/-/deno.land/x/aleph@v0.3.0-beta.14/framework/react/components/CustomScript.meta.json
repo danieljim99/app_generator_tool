@@ -1,0 +1,15 @@
+{
+  "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/components/CustomScript.ts",
+  "deps": [
+    {
+      "specifier": "https://esm.sh/react@17.0.2"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/context.ts"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/helper.ts"
+    }
+  ],
+  "sourceHash": "10bf24e7b63bdf31ce1076193162cfffadd30af8"
+}

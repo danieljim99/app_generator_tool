@@ -1,0 +1,12 @@
+{
+  "specifier": "/lib/getEnv.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/mod.ts"
+    }
+  ],
+  "sourceHash": "160c3ec2bc6c693704410296c30caf19ca9c6d35",
+  "denoHooks": [
+    "xBZczApIpcZWqyyg7mmFKL4v2s"
+  ]
+}

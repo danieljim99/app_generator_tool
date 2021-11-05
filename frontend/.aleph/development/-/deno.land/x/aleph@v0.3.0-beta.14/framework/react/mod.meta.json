@@ -1,0 +1,15 @@
+{
+  "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/mod.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/hooks.ts"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/hoc.ts"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/components/Fallback.ts"
+    }
+  ],
+  "sourceHash": "1ce169dc8f87aa7fc12ce9be43e97b6eeb7f5157"
+}

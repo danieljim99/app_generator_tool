@@ -1,0 +1,9 @@
+{
+  "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/core/routing.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/shared/util.ts"
+    }
+  ],
+  "sourceHash": "223a7f1fe040f4eb0cd67fc5010be50af5c4a8e3"
+}

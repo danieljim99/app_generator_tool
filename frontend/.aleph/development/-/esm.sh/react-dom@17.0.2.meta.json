@@ -1,0 +1,9 @@
+{
+  "specifier": "https://esm.sh/react-dom@17.0.2",
+  "deps": [
+    {
+      "specifier": "https://cdn.esm.sh/v52/react-dom@17.0.2/deno/react-dom.development.js"
+    }
+  ],
+  "sourceHash": "10cdb7676e66d9498f944e3bed313aefe7f66117"
+}

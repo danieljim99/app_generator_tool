@@ -1,0 +1,9 @@
+{
+  "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/mark.ts",
+  "deps": [
+    {
+      "specifier": "https://deno.land/std@0.63.0/encoding/_yaml/utils.ts"
+    }
+  ],
+  "sourceHash": "f4d9ee46ee0bc53d1659f197214dd31f019e6618"
+}

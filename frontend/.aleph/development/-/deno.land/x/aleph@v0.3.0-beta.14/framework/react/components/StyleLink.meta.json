@@ -1,0 +1,15 @@
+{
+  "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/components/StyleLink.ts",
+  "deps": [
+    {
+      "specifier": "https://esm.sh/react@17.0.2"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/core/style.ts"
+    },
+    {
+      "specifier": "https://deno.land/x/aleph@v0.3.0-beta.14/framework/react/helper.ts"
+    }
+  ],
+  "sourceHash": "d27fe3316c4acf460fae37baf0c5a95a286730fc"
+}
