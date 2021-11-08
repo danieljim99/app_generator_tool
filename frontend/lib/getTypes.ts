@@ -40,6 +40,7 @@ const readYaml = async (path: string) => {
         if (names.includes(type.name)) {
           throw new Error("The value of the 'name' field of each type must be unique and cannot be used for more than one type at the same time");
         }
+        let fieldsNames: string[] = [];
         type.fields.forEach((field: any) => {
           if (
             !field.hasOwnProperty("name") ||
@@ -52,6 +53,10 @@ const readYaml = async (path: string) => {
               `The 'fields' field must have a yaml list of a 'name' field of type 'string' and a 'type' field of type 'string' using one of the following values: ${availableTypes.toString()}`
             );
           }
+          if (fieldsNames.includes(field.name)) {
+            throw new Error("The name of the fields inside of a type must be unique and cannot be used for more than one field at the same time");
+          }
+          fieldsNames.push(field.name);
         });
         names.push(type.name);
       });

@@ -38,7 +38,7 @@ const readYaml = async (path: string) => {
         if (typeof(result.types) !== "object") {
             throw new Error("The 'types' field in the yaml file has a wrong type");
         } else {
-            let names: string[] = [];
+            let typesNames: string[] = [];
             result.types.forEach((type: any, index: number) => {
                 if (
                     !type.hasOwnProperty("name") ||
@@ -51,22 +51,28 @@ const readYaml = async (path: string) => {
                 if ((type.name as string).charAt(0) === (type.name as string).charAt(0).toLocaleLowerCase()) {
                     throw new Error("The value of the 'name' field of each type must start with upper case");
                 }
-                if (names.includes(type.name)) {
+                if (typesNames.includes(type.name)) {
                     throw new Error("The value of the 'name' field of each type must be unique and cannot be used for more than one type at the same time");
                 }
+                let fieldsNames: string[] = [];
                 type.fields.forEach((field: any) => {
                     if (
                         !field.hasOwnProperty("name") ||
                         !field.hasOwnProperty("type") ||
                         field.hasOwnProperty("name") && typeof(field.name) !== "string" ||
                         field.hasOwnProperty("type") && typeof(field.type) !== "string" ||
-                        field.hasOwnProperty("type") && typeof(field.type) === "string" && !availableTypes.includes(field.type)) {
+                        field.hasOwnProperty("type") && typeof(field.type) === "string" && !availableTypes.includes(field.type)
+                    ) {
                         throw new Error(
                             `The 'fields' field must have a yaml list of a 'name' field of type 'string' and a 'type' field of type 'string' using one of the following values: ${availableTypes.toString()}`
                         );
                     }
+                    if (fieldsNames.includes(field.name)) {
+                        throw new Error("The name of the fields inside of a type must be unique and cannot be used for more than one field at the same time");
+                    }
+                    fieldsNames.push(field.name);
                 });
-                names.push(type.name);
+                typesNames.push(type.name);
             });
         }
     }
